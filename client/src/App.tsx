@@ -1,9 +1,12 @@
-import { useState } from "react";
+import React from "react";
+import ImageUpload from "./Components/ImageUpload";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return <div className="App"></div>;
+  return (
+    <React.Fragment>
+      <ImageUpload />
+    </React.Fragment>
+  );
 }
 
 export default App;
