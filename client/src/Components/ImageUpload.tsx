@@ -1,13 +1,10 @@
 import React, { useState, useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as mobilenet from "@tensorflow-models/mobilenet";
+import { Props } from "../interfaces/Props";
 tf.setBackend("cpu");
 
-interface Props {
-  setBreedType: (dogBreed: string) => void;
-}
-
-const ImageUpload: React.FC<Props> = ({ setBreedType }) => {
+const ImageUpload: React.FC<Props> = ({ setBreedType, setPrediction }) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
@@ -31,15 +28,13 @@ const ImageUpload: React.FC<Props> = ({ setBreedType }) => {
   };
 
   const Inference = async () => {
+    setPrediction(true);
     const img = imageRef.current;
 
     if (img != null) {
       const model = await mobilenet.load();
 
       const predictions = await model.classify(img);
-
-      console.log("Predictions: ");
-      console.log(predictions);
 
       let ClassifiedBreed: string = predictions[0].className;
 
@@ -51,6 +46,7 @@ const ImageUpload: React.FC<Props> = ({ setBreedType }) => {
       }
 
       setBreedType(ClassifiedBreed);
+      setPrediction(false);
     }
   };
 
@@ -66,7 +62,7 @@ const ImageUpload: React.FC<Props> = ({ setBreedType }) => {
           className="h-auto max-w-full mx-auto w-3/5 my-16"
         />
       ) : (
-        <div className="flex items-center justify-center w-full w-3/5 mx-auto my-16">
+        <div className="flex items-center justify-center  w-3/5 mx-auto my-16">
           <label
             htmlFor="image-upload"
             className="flex flex-col items-center justify-center w-full h-96 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
